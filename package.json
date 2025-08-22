@@ -1,10 +1,11 @@
 {
-  "name": "sideVar",
+  "name": "sidevar",
   "displayName": "sideVar",
   "description": "List all variables of the current file in the sidebar — 変数はサイドバーに。",
   "version": "0.0.1",
+  "icon": "assets/images/sidevar.png",
   "engines": {
-    "vscode": "^1.103.0"
+    "vscode": "^1.102.0"
   },
   "categories": [
     "Other"
@@ -12,23 +13,35 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "sideVar.helloWorld",
-        "title": "Hello World"
-      }
-    ]
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sidevar",
+          "title": "SideVar",
+          "icon": "assets/images/sidevar.png"
+        }
+      ]
+    },
+    "views": {
+      "sidevar": [
+        {
+          "type": "webview",
+          "id": "sidevar.view",
+          "name": "SideVar View",
+          "icon": "assets/images/sidevar.png"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.103.0",
+    "@types/vscode": "^1.102.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
