@@ -11,14 +11,16 @@ flowchart TD
     C --> D[featureブランチ作成]
     D --> E[TodoWrite で進捗管理]
     E --> F[実装・テスト]
-    F --> G[PBI完了]
-    G --> H[PROGRESS_REPORT.md更新]
-    H --> I[ブランチマージ]
-    I --> J[次のPBI]
+    F --> G[PBI完了・ドキュメント更新]
+    G --> H[コミット・リモートプッシュ]
+    H --> I[PR作成・セルフマージ]
+    I --> J[ローカルdevelop更新]
+    J --> K[次のPBI開始]
 
     style A fill:#e3f2fd
     style G fill:#c8e6c9
     style H fill:#fff3e0
+    style I fill:#e1f5fe
 ```
 
 ## 📚 ドキュメント管理規則
@@ -73,18 +75,30 @@ git checkout -b feature/PBI-X-description
 ### 3️⃣ PBI 完了後
 
 ```bash
-# 4. PROGRESS_REPORT.md更新
-- [ ] 完了PBIセクション追加
-- [ ] ガントチャート進捗更新
-- [ ] 円グラフ進捗率更新
-- [ ] 設計変更があれば履歴追加
+# 4. ドキュメント最終更新
+- [ ] PROGRESS_REPORT.md更新（完了PBI追加、進捗率更新）
+- [ ] 必要に応じて他のドキュメント更新
 
-# 5. ブランチマージ
+# 5. PR作成・マージフロー
 git add .
 git commit -m "feat: PBI-X implementation"
+git push -u origin feature/PBI-X-description
+
+# GitHub上でPR作成 → セルフマージ
+gh pr create --title "PBI-X: 機能名" --body "実装内容の説明"
+gh pr merge --squash --delete-branch
+
+# 6. ローカル環境更新
 git checkout develop
-git merge feature/PBI-X-description
-git branch -d feature/PBI-X-description
+git pull origin develop
+git branch -D feature/PBI-X-description  # ローカルブランチ削除
+```
+
+### 4️⃣ 次のPBI準備
+
+```bash
+# 7. 新しい作業ブランチ作成
+git checkout -b feature/PBI-Y-description
 ```
 
 ## 🎨 Mermaid 図表ガイドライン
