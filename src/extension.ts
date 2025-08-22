@@ -14,6 +14,7 @@ export function deactivate() {}
 
 class SideVarViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "sidevar.view";
+  private webviewView: vscode.WebviewView | undefined;
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
@@ -22,6 +23,7 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken
   ) {
+    this.webviewView = webviewView;
     const webview = webviewView.webview;
 
     webview.options = {
@@ -32,10 +34,41 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
     webview.html = this.getHtml(webview);
 
     webview.onDidReceiveMessage((msg) => {
-      if (msg?.type === "ping") {
-        vscode.window.showInformationMessage("pong from extension 🤖");
+      if (msg?.type === "analyzeFile") {
+        this.analyzeCurrentFile();
       }
     });
+  }
+
+  private analyzeCurrentFile() {
+    const activeEditor = vscode.window.activeTextEditor;
+    if (!activeEditor) {
+      this.sendMessage({
+        type: 'error',
+        data: { message: 'アクティブなファイルがありません' }
+      });
+      return;
+    }
+
+    const document = activeEditor.document;
+    const fileName = document.fileName.split('/').pop() || '';
+    const fileContent = document.getText();
+    
+    this.sendMessage({
+      type: 'fileAnalysis',
+      data: {
+        fileName,
+        languageId: document.languageId,
+        lineCount: document.lineCount,
+        content: fileContent
+      }
+    });
+  }
+
+  private sendMessage(message: any) {
+    if (this.webviewView) {
+      this.webviewView.webview.postMessage(message);
+    }
   }
 
   private getHtml(webview: vscode.Webview): string {
@@ -75,9 +108,9 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
           </style>
         </head>
         <body>
-          <h3>SideVar Webview</h3>
-          <p>サイドバー内で HTML を自由に描画できます。</p>
-          <button id="pingBtn">拡張へメッセージ送信</button>
+          <h3>SideVar</h3>
+          <p>現在のファイルの変数を解析します。</p>
+          <button id="analyzeBtn">ファイルを解析</button>
           <div class="box" id="log"></div>
           <div class="box" id="table"></div>
 
