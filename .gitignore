@@ -1,0 +1,13 @@
+out
+dist
+node_modules
+.vscode-test/
+*.vsix
+.DS_Store
+*.log
+.env
+.env.local
+.env.production.local
+.env.test.local
+coverage/
+.nyc_output/
