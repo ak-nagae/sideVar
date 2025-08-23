@@ -9,55 +9,106 @@
     console.log(t);
   };
 
-  const showFileAnalysis = (data) => {
+
+  const showLLMLoading = (data) => {
     const container = document.getElementById("table");
     if (!container) return;
 
+    // ボタンを非活性にする
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    if (analyzeBtn) {
+      analyzeBtn.disabled = true;
+      analyzeBtn.textContent = "解析中...";
+    }
+
     container.innerHTML = `
-      <div style="padding: 10px;">
-        <h4>ファイル解析結果</h4>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
-          <tr>
-            <td style="border: 1px solid #8883; padding: 4px; font-weight: bold;">ファイル名:</td>
-            <td style="border: 1px solid #8883; padding: 4px;">${data.fileName}</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #8883; padding: 4px; font-weight: bold;">言語:</td>
-            <td style="border: 1px solid #8883; padding: 4px;">${data.languageId}</td>
-          </tr>
-          <tr>
-            <td style="border: 1px solid #8883; padding: 4px; font-weight: bold;">行数:</td>
-            <td style="border: 1px solid #8883; padding: 4px;">${data.lineCount}</td>
-          </tr>
-        </table>
-        <div style="background: #2d2d30; padding: 10px; border-radius: 4px; max-height: 200px; overflow-y: auto;">
-          <h5 style="margin: 0 0 10px 0; color: #cccccc;">ファイル内容 (プレビュー):</h5>
-          <pre style="margin: 0; white-space: pre-wrap; color: #d4d4d4; font-size: 12px;">${data.content.substring(0, 500)}${data.content.length > 500 ? '...' : ''}</pre>
-        </div>
-        <p style="margin-top: 10px; color: #6c9bd2;">✅ ファイル内容を取得しました。LLM送信機能は次のPBIで実装予定です。</p>
+      <div class="box" style="text-align: center;">
+        <div class="spinner"></div>
+        <h4 class="loading-text">🤖 LLM解析中...</h4>
+        <p>${data.message}</p>
       </div>
     `;
   };
 
-  const showError = (data) => {
+  const showLLMResponse = (data) => {
     const container = document.getElementById("table");
     if (!container) return;
 
+    // ボタンを再活性化する
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    if (analyzeBtn) {
+      analyzeBtn.disabled = false;
+      analyzeBtn.textContent = "🤖 変数を解析";
+    }
+
+    let tableRows = data.variables.map(variable => `
+      <tr>
+        <td class="variable-name">${variable.name}</td>
+        <td>${variable.role}</td>
+        <td class="variable-type">${variable.type || ''}</td>
+      </tr>
+    `).join('');
+
     container.innerHTML = `
-      <div style="padding: 10px; color: #f48771;">
-        <h4>エラー</h4>
-        <p>${data.message}</p>
+      <div class="box">
+        <h4>🤖 LLM変数解析結果</h4>
+        <div style="margin-bottom: 10px;">
+          <strong>ファイル:</strong> ${data.fileName} | 
+          <strong>言語:</strong> ${data.languageId} | 
+          <strong>変数数:</strong> ${data.variables.length}
+        </div>
+        <table>
+          <thead>
+            <tr class="table-header">
+              <th>変数名</th>
+              <th>役割</th>
+              <th>タイプ</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRows}
+          </tbody>
+        </table>
+      </div>
+    `;
+  };
+
+  const showLLMError = (data) => {
+    const container = document.getElementById("table");
+    if (!container) return;
+
+    // ボタンを再活性化する（エラー時）
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    if (analyzeBtn) {
+      analyzeBtn.disabled = false;
+      analyzeBtn.textContent = "🤖 変数を解析";
+    }
+
+    container.innerHTML = `
+      <div class="box error-text">
+        <h4>❌ LLM解析エラー</h4>
+        <p><strong>エラー:</strong> ${data.message}</p>
+        ${data.details ? `<p><strong>詳細:</strong> ${data.details}</p>` : ''}
+        <div class="info-box">
+          <strong>対処方法:</strong>
+          <ul>
+            <li>LLM Studioサーバーが起動しているか確認</li>
+            <li>拡張機能の設定でサーバーURLを確認</li>
+            <li>ネットワーク接続を確認</li>
+          </ul>
+        </div>
       </div>
     `;
   };
 
   log("JavaScript読み込み完了");
 
-  const btn = document.getElementById("analyzeBtn");
-  if (btn) {
-    btn.addEventListener("click", () => {
+  const analyzeBtn = document.getElementById("analyzeBtn");
+
+  if (analyzeBtn) {
+    analyzeBtn.addEventListener("click", () => {
       vscode.postMessage({ type: "analyzeFile" });
-      log("ファイル解析開始...");
+      log("LLM解析開始...");
     });
   }
 
@@ -66,11 +117,14 @@
     log("received: " + JSON.stringify(message));
 
     switch (message.type) {
-      case 'fileAnalysis':
-        showFileAnalysis(message.data);
+      case 'llmLoading':
+        showLLMLoading(message.data);
         break;
-      case 'error':
-        showError(message.data);
+      case 'llmResponse':
+        showLLMResponse(message.data);
+        break;
+      case 'llmError':
+        showLLMError(message.data);
         break;
       default:
         log(`未知のメッセージタイプ: ${message.type}`);
