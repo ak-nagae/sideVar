@@ -12,7 +12,11 @@ interface LLMResponse {
 class LLMClient {
   private readonly defaultBaseUrl = "http://127.0.0.1:1234/v1";
 
-  async analyzeCode(fileName: string, content: string, languageId: string): Promise<LLMResponse> {
+  async analyzeCode(
+    fileName: string,
+    content: string,
+    languageId: string
+  ): Promise<LLMResponse> {
     // VSCode設定からベースURLを取得
     const config = vscode.workspace.getConfiguration("sidevar");
     const baseURL = config.get<string>("llmServerUrl", this.defaultBaseUrl);
@@ -76,7 +80,9 @@ JSON形式で以下の構造で変数名と役割説明を返してください�
 
   private parseResponse(content: string): LLMResponse {
     try {
-      const jsonMatch = content.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/) || content.match(/(\{[\s\S]*\})/);
+      const jsonMatch =
+        content.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/) ||
+        content.match(/(\{[\s\S]*\})/);
       if (!jsonMatch) {
         throw new Error("JSON形式の応答が見つかりません");
       }
@@ -87,7 +93,7 @@ JSON形式で以下の構造で変数名と役割説明を返してください�
       if (!parsed.variables || !Array.isArray(parsed.variables)) {
         throw new Error("変数配列が見つかりません");
       }
-      
+
       return parsed as LLMResponse;
     } catch (error) {
       throw new Error(`応答の解析に失敗: ${error}`);
@@ -201,25 +207,47 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
 
   private getHtml(webview: vscode.Webview): string {
     const nonce = getNonce();
-    
+
     // CSS and script URIs for modular structure
     const stylesUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "assets", "webview", "styles.css")
-    );
-    const loggerUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "assets", "webview", "logger.js")
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "styles.css"
+      )
     );
     const editableCellUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "assets", "webview", "editable-cell.js")
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "editable-cell.js"
+      )
     );
     const tableRendererUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "assets", "webview", "table-renderer.js")
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "table-renderer.js"
+      )
     );
     const messageHandlerUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "assets", "webview", "message-handler.js")
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "message-handler.js"
+      )
     );
     const mainUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.context.extensionUri, "assets", "webview", "main.js")
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "main.js"
+      )
     );
     const csp = [
       "default-src 'none';",
@@ -241,13 +269,11 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
         </head>
         <body>
           <h3>SideVar</h3>
-          <p>現在のファイルの変数をLLMで解析します。</p>
-          <button id="analyzeBtn">🤖 変数を解析</button>
-          <div class="box" id="log"></div>
+          <p>選択中のファイルをベースに変数辞書を作成します</p>
+          <button id="analyzeBtn">🤖 変数辞書を作成開始</button>
           <div class="box" id="table"></div>
 
           <!-- Load scripts in dependency order -->
-          <script nonce="${nonce}" src="${loggerUri}"></script>
           <script nonce="${nonce}" src="${editableCellUri}"></script>
           <script nonce="${nonce}" src="${tableRendererUri}"></script>
           <script nonce="${nonce}" src="${messageHandlerUri}"></script>
