@@ -11,7 +11,7 @@ class MessageHandler {
     if (analyzeBtn) {
       analyzeBtn.addEventListener("click", () => {
         this.vscode.postMessage({ type: "analyzeFile" });
-        Logger.log("LLM解析開始...");
+        TableRenderer.showDictionaryStart();
       });
     }
 
@@ -30,7 +30,7 @@ class MessageHandler {
           TableRenderer.showLLMError(message.data);
           break;
         default:
-          Logger.log(`未知のメッセージタイプ: ${message.type}`);
+          console.warn(`未知のメッセージタイプ: ${message.type}`);
       }
     });
   }
