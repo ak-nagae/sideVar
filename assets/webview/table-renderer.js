@@ -59,9 +59,16 @@ class TableRenderer {
     container.innerHTML = `
       <div class="box">
         <div class="loading-header">
-          <div class="loading-spinner"></div>
-          <h4 class="loading-text">🤖 変数辞書を作成中...</h4>
-          <p class="loading-subtitle">LLMが変数を解析しています</p>
+          <div class="robot-loading">
+            <div class="robot-icon">🤖</div>
+            <h4 class="loading-text">変数辞書を作成中</h4>
+            <div class="loading-dots">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+            <p class="loading-subtitle">LLMが変数を解析しています</p>
+          </div>
         </div>
         <div class="skeleton-cards-container">
           ${skeletonCards}
