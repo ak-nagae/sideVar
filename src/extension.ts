@@ -12,7 +12,11 @@ interface LLMResponse {
 class LLMClient {
   private readonly defaultBaseUrl = "http://127.0.0.1:1234/v1";
 
-  async analyzeCode(fileName: string, content: string, languageId: string): Promise<LLMResponse> {
+  async analyzeCode(
+    fileName: string,
+    content: string,
+    languageId: string
+  ): Promise<LLMResponse> {
     // VSCode設定からベースURLを取得
     const config = vscode.workspace.getConfiguration("sidevar");
     const baseURL = config.get<string>("llmServerUrl", this.defaultBaseUrl);
@@ -76,7 +80,9 @@ JSON形式で以下の構造で変数名と役割説明を返してください�
 
   private parseResponse(content: string): LLMResponse {
     try {
-      const jsonMatch = content.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/) || content.match(/(\{[\s\S]*\})/);
+      const jsonMatch =
+        content.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/) ||
+        content.match(/(\{[\s\S]*\})/);
       if (!jsonMatch) {
         throw new Error("JSON形式の応答が見つかりません");
       }
@@ -87,7 +93,7 @@ JSON形式で以下の構造で変数名と役割説明を返してください�
       if (!parsed.variables || !Array.isArray(parsed.variables)) {
         throw new Error("変数配列が見つかりません");
       }
-      
+
       return parsed as LLMResponse;
     } catch (error) {
       throw new Error(`応答の解析に失敗: ${error}`);
@@ -201,7 +207,41 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
 
   private getHtml(webview: vscode.Webview): string {
     const nonce = getNonce();
-    const scriptUri = webview.asWebviewUri(
+
+    // CSS and script URIs for modular structure
+    const stylesUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "styles.css"
+      )
+    );
+    const editableCellUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "editable-cell.js"
+      )
+    );
+    const tableRendererUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "table-renderer.js"
+      )
+    );
+    const messageHandlerUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "webview",
+        "message-handler.js"
+      )
+    );
+    const mainUri = webview.asWebviewUri(
       vscode.Uri.joinPath(
         this.context.extensionUri,
         "assets",
@@ -212,7 +252,7 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
     const csp = [
       "default-src 'none';",
       `img-src ${webview.cspSource} https:;`,
-      "style-src 'nonce-" + nonce + "';",
+      `style-src 'nonce-${nonce}' ${webview.cspSource};`,
       // Allow scripts that either have the right nonce or are served from this webview origin
       `script-src 'nonce-${nonce}' ${webview.cspSource};`,
     ].join(" ");
@@ -225,35 +265,19 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
           <meta http-equiv="Content-Security-Policy" content="${csp}">
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <title>SideVar</title>
-          <style nonce="${nonce}">
-            body { font: 13px/1.4 -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif; padding: 10px; }
-            button { padding: 6px 10px; border-radius: 8px; border: 1px solid #8883; }
-            button:disabled { opacity: 0.6; cursor: not-allowed; }
-            .box { padding: 10px; border: 1px solid #8883; border-radius: 8px; margin-top: 8px; }
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #8883; padding: 4px 6px; text-align: left; }
-            th { background: color-mix(in srgb, var(--vscode-sideBar-background) 80%, #ffffff 20%);
-            color: var(--vscode-sideBar-foreground); }
-            .spinner { border: 2px solid #0e639c; border-top: 2px solid transparent; border-radius: 50%; 
-                      width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 10px; }
-            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-            .loading-text { color: #0e639c; }
-            .error-text { color: #f48771; }
-            .info-box { margin-top: 10px; padding: 8px; background-color: #2d2d30; border-radius: 4px; }
-            .variable-name { font-weight: bold; font-family: monospace; }
-            .variable-type { color: #569cd6; }
-            .table-header { background-color: #2d2d30; }
-            .table-header th { color: #cccccc; }
-          </style>
+          <link rel="stylesheet" href="${stylesUri}">
         </head>
         <body>
           <h3>SideVar</h3>
-          <p>現在のファイルの変数をLLMで解析します。</p>
-          <button id="analyzeBtn" style="background-color: #0e639c; color: white;">🤖 変数を解析</button>
-          <div class="box" id="log"></div>
-          <div class="box" id="table"></div>
+          <p>選択中のファイルをベースに変数辞書を作成します</p>
+          <button id="analyzeBtn">🤖 変数辞書を作成開始</button>
+          <div id="table"></div>
 
-          <script nonce="${nonce}" src="${scriptUri}"></script>
+          <!-- Load scripts in dependency order -->
+          <script nonce="${nonce}" src="${editableCellUri}"></script>
+          <script nonce="${nonce}" src="${tableRendererUri}"></script>
+          <script nonce="${nonce}" src="${messageHandlerUri}"></script>
+          <script nonce="${nonce}" src="${mainUri}"></script>
         </body>
       </html>
     `;
