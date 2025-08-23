@@ -1,31 +1,55 @@
-# sideVar README
+# SideVar - 変数はサイドバーに
 
-This is the README for your extension "sideVar". After writing up a brief description, we recommend including the following sections.
+VSCodeのサイドバーに現在開いているファイルの変数名を辞書形式で表示する拡張機能です。ローカルLLMが各変数の役割を自動で解析・説明します。
 
-## Features
+## ✨ Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- 🤖 **LLM自動解析**: ローカルLLMがファイル内の全変数を自動識別
+- 📝 **変数辞書表示**: 変数名・役割・型を見やすいテーブルで表示
+- 🌐 **全言語対応**: JavaScript, Python, Java, C++, Go など全言語をサポート
+- ⚙️ **柔軟な設定**: お使いのローカルLLMに合わせてURL設定可能
 
-For example if there is an image subfolder under your extension project workspace:
+## 🔧 Requirements
 
-\!\[feature X\]\(images/feature-x.png\)
+ローカルLLMサーバーが必要です。以下のいずれかを推奨：
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- **LM Studio** - GUI で簡単セットアップ
+- **Ollama** - コマンドラインベース 
+- **text-generation-webui** - Web UI付き
+- **LocalAI** - OpenAI API互換
 
-## Requirements
+## ⚙️ Extension Settings
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+この拡張機能は以下の設定を提供します：
 
-## Extension Settings
+### `sidevar.llmServerUrl`
+- **型**: string
+- **デフォルト**: `http://127.0.0.1:1234/v1`
+- **説明**: OpenAI互換LLMサーバーのベースURL
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+### 🛠️ 設定方法
 
-For example:
+#### 方法1: VSCode設定画面
+1. `Cmd/Ctrl + ,` で設定画面を開く
+2. 検索バーに「sidevar」と入力
+3. **SideVar: Llm Server Url** を設定
 
-This extension contributes the following settings:
+#### 方法2: settings.json に直接記述
+```json
+{
+  "sidevar.llmServerUrl": "http://localhost:8080/api/chat"
+}
+```
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+### 📋 主要LLMツールのベースURL例
+
+| LLMツール | ベースURL | 備考 |
+|-----------|-----|------|
+| **LM Studio** | `http://127.0.0.1:1234/v1` | デフォルト値・OpenAI互換 |
+| **Ollama** | `http://localhost:11434/v1` | OpenAI互換エンドポイント |
+| **text-generation-webui** | `http://127.0.0.1:5000/v1` | OpenAI互換モード |
+| **LocalAI** | `http://localhost:8080/v1` | OpenAI互換 |
+| **Llama.cpp server** | `http://localhost:8080/v1` | OpenAI互換モード |
 
 ## Known Issues
 
