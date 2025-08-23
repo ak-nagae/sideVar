@@ -31,6 +31,16 @@
           "icon": "assets/images/sidevar.png"
         }
       ]
+    },
+    "configuration": {
+      "title": "SideVar",
+      "properties": {
+        "sidevar.llmServerUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:1234/v1",
+          "description": "OpenAI互換LLMサーバーのベースURL"
+        }
+      }
     }
   },
   "scripts": {
@@ -41,14 +51,17 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.102.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
+    "@types/vscode": "^1.102.0",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
-    "eslint": "^9.32.0",
-    "typescript": "^5.9.2",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "openai": "^5.15.0"
   }
 }
