@@ -14,9 +14,17 @@ class TableRenderer {
     }
 
     container.innerHTML = `
-      <div class="box dictionary-creating" style="text-align: center;">
-        <h3>🤖 変数辞書を作成開始</h3>
-        <p>LLMが変数を解析中です...</p>
+      <div class="box">
+        <div class="start-animation">
+          <div class="pulse-icon">🤖</div>
+          <h3 class="start-title">変数辞書を作成開始</h3>
+          <div class="progress-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <p class="start-subtitle">ファイルをLLMに送信中...</p>
+        </div>
       </div>
     `;
 
@@ -36,10 +44,28 @@ class TableRenderer {
       analyzeBtn.textContent = "変数辞書作成中...";
     }
 
+    // スケルトンローダー用のカードを生成
+    const skeletonCards = Array.from({ length: 4 }, () => `
+      <div class="skeleton-card">
+        <div class="skeleton-card-header">
+          <div class="skeleton-line skeleton-variable-name"></div>
+          <div class="skeleton-line skeleton-variable-type"></div>
+        </div>
+        <div class="skeleton-line skeleton-role-line1"></div>
+        <div class="skeleton-line skeleton-role-line2"></div>
+      </div>
+    `).join("");
+
     container.innerHTML = `
-      <div class="box" style="text-align: center;">
-        <div class="spinner"></div>
-        <h4 class="loading-text">🤖 変数辞書を作成中...</h4>
+      <div class="box">
+        <div class="loading-header">
+          <div class="loading-spinner"></div>
+          <h4 class="loading-text">🤖 変数辞書を作成中...</h4>
+          <p class="loading-subtitle">LLMが変数を解析しています</p>
+        </div>
+        <div class="skeleton-cards-container">
+          ${skeletonCards}
+        </div>
       </div>
     `;
 
@@ -79,7 +105,7 @@ class TableRenderer {
     container.innerHTML = `
       <div class="box">
         <h4>🤖 LLM変数解析結果</h4>
-        <div style="margin-bottom: 10px;">
+        <div class="results-info">
           <strong>ファイル:</strong> ${data.fileName} | 
           <strong>言語:</strong> ${data.languageId} | 
           <strong>変数数:</strong> ${data.variables.length}
