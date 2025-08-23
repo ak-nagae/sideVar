@@ -2,19 +2,19 @@
 
 ## 📋 開発フロー
 
-### 🔄 PBI 開発サイクル
+### 🔄 PBI 開発サイクル（main ブランチベース）
 
 ```mermaid
 flowchart TD
     A[新PBI開始] --> B[PBI_LIST.md確認]
     B --> C[受け入れ基準チェック]
-    C --> D[featureブランチ作成]
+    C --> D[mainからfeatureブランチ作成]
     D --> E[TodoWrite で進捗管理]
     E --> F[実装・テスト]
     F --> G[PBI完了・ドキュメント更新]
     G --> H[コミット・リモートプッシュ]
     H --> I[PR作成・セルフマージ]
-    I --> J[ローカルdevelop更新]
+    I --> J[ローカルmain更新]
     J --> K[次のPBI開始]
 
     style A fill:#e3f2fd
@@ -58,8 +58,8 @@ graph LR
 - [ ] 技術的制約確認
 
 # 2. featureブランチ作成
-git checkout develop
-git pull origin develop
+git checkout main
+git pull origin main
 git checkout -b feature/PBI-X-description
 ```
 
@@ -89,8 +89,8 @@ gh pr create --title "PBI-X: 機能名" --body "実装内容の説明"
 gh pr merge --squash --delete-branch
 
 # 6. ローカル環境更新
-git checkout develop
-git pull origin develop
+git checkout main
+git pull origin main
 git branch -D feature/PBI-X-description  # ローカルブランチ削除
 ```
 
