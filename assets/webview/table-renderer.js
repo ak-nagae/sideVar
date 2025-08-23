@@ -60,16 +60,18 @@ class TableRenderer {
       analyzeBtn.textContent = "🤖 変数辞書を再生成";
     }
 
-    let tableRows = data.variables
+    let variableCards = data.variables
       .map(
         (variable, index) => `
-      <tr>
-        <td class="variable-name">${variable.name}</td>
-        <td class="variable-role editable-cell" data-variable-index="${index}">${
+      <div class="variable-card">
+        <div class="variable-card-header">
+          <h3 class="variable-card-name">${variable.name}</h3>
+          <p class="variable-card-type">${variable.type || ""}</p>
+        </div>
+        <p class="variable-card-role editable-cell" data-variable-index="${index}">${
           variable.role
-        }</td>
-        <td class="variable-type">${variable.type || ""}</td>
-      </tr>
+        }</p>
+      </div>
     `
       )
       .join("");
@@ -82,18 +84,9 @@ class TableRenderer {
           <strong>言語:</strong> ${data.languageId} | 
           <strong>変数数:</strong> ${data.variables.length}
         </div>
-        <table>
-          <thead>
-            <tr class="table-header">
-              <th>変数名</th>
-              <th>役割</th>
-              <th>タイプ</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${tableRows}
-          </tbody>
-        </table>
+        <div class="variable-cards-container">
+          ${variableCards}
+        </div>
       </div>
     `;
 

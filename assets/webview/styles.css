@@ -180,3 +180,104 @@ th {
   outline: none; 
 }
 
+/* Card layout styles */
+.variable-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+}
+
+.variable-card {
+  background: var(--vscode-editor-background, #1e1e1e);
+  border: 1px solid #3c3c3c;
+  border-left: 4px solid #569cd6;
+  border-radius: 4px;
+  padding: 12px;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.variable-card:hover {
+  background: #252526;
+}
+
+.variable-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.variable-card-name {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  color: #569cd6;
+  margin: 0;
+}
+
+.variable-card-type {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 12px;
+  color: #9cdcfe;
+  margin: 0;
+}
+
+.variable-card-role {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #cccccc;
+  margin: 0;
+  cursor: pointer;
+  border-radius: 2px;
+  padding: 2px;
+  transition: background-color 0.2s ease;
+}
+
+.variable-card-role:hover {
+  background-color: #3c3c3c;
+}
+
+.variable-card-role.editing {
+  padding: 0;
+}
+
+.variable-card .edit-input {
+  background: var(--vscode-input-background, #3c3c3c);
+  color: var(--vscode-input-foreground, #cccccc);
+  border: 2px solid #569cd6;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments for cards */
+@media (max-width: 400px) {
+  .variable-card {
+    padding: 8px;
+  }
+  
+  .variable-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  
+  .variable-card-name {
+    font-size: 13px;
+  }
+  
+  .variable-card-type {
+    font-size: 11px;
+  }
+  
+  .variable-card-role {
+    font-size: 12px;
+  }
+}
+
+/* Hide legacy table styles when using cards */
+.variable-cards-container ~ table {
+  display: none;
+}
+
