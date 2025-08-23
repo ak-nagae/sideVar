@@ -23,7 +23,7 @@ class TableRenderer {
     // Show table container when content is added
     container.style.display = "block";
   }
-  static showLLMLoading(data) {
+  static showLLMLoading() {
     const container = document.getElementById("table");
     if (!container) {
       return;

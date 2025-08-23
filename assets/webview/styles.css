@@ -55,6 +55,15 @@ button:disabled {
   display: none;
 }
 
+/* Table container styles */
+#table {
+  margin-top: 10px;
+}
+
+#table > .box {
+  margin-top: 0;
+}
+
 /* Animated text for dictionary creation */
 .dictionary-creating {
   animation: pulse 1.5s ease-in-out infinite;

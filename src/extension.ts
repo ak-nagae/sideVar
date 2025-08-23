@@ -271,7 +271,7 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
           <h3>SideVar</h3>
           <p>選択中のファイルをベースに変数辞書を作成します</p>
           <button id="analyzeBtn">🤖 変数辞書を作成開始</button>
-          <div class="box" id="table"></div>
+          <div id="table"></div>
 
           <!-- Load scripts in dependency order -->
           <script nonce="${nonce}" src="${editableCellUri}"></script>
