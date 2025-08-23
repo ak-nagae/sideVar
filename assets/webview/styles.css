@@ -50,6 +50,11 @@ button:disabled {
   margin-top: 8px; 
 }
 
+/* Hide empty containers initially */
+#log:empty, #table:empty {
+  display: none;
+}
+
 /* Table styles */
 table { 
   width: 100%; 
@@ -141,13 +146,3 @@ th {
   outline: none; 
 }
 
-.edited { 
-  background-color: #2d4a2d !important; 
-  border-left: 3px solid #4caf50; 
-}
-
-.edited:before { 
-  content: "✎ "; 
-  color: #4caf50; 
-  font-weight: bold; 
-}
