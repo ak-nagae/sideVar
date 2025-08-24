@@ -25,7 +25,7 @@ VSCodeのサイドバーに現在開いているファイルの変数辞書をAI
 
 ### 📹 デモ動画
 
-実際の動作を確認したい方は、プロジェクトのデモ動画をご覧ください。
+[![sideVar](http://img.youtube.com/vi/YGnFqchZJ7I/sddefault.jpg)](https://youtu.be/YGnFqchZJ7I)
 
 ## 🔧 Requirements
 
