@@ -1,13 +1,31 @@
-# SideVar - 変数はサイドバーに
+# SideVar - AI Variable Dictionary
 
-VSCodeのサイドバーに現在開いているファイルの変数名を辞書形式で表示する拡張機能です。ローカルLLMが各変数の役割を自動で解析・説明します。
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://marketplace.visualstudio.com/items?itemName=ak-nagae.sidevar)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## ✨ Features
+VSCodeのサイドバーに現在開いているファイルの変数辞書をAI生成で表示する革新的な拡張機能です。ローカルLLMが各変数の役割を日本語で自動解析・説明します。
 
-- 🤖 **LLM自動解析**: ローカルLLMがファイル内の全変数を自動識別
-- 📝 **変数辞書表示**: 変数名・役割・型を見やすいテーブルで表示
-- 🌐 **全言語対応**: JavaScript, Python, Java, C++, Go など全言語をサポート
+![SideVar Demo](assets/images/header.png)
+
+## ✨ 主な機能
+
+- 🤖 **AI自動解析**: ローカルLLMがファイル内の全変数を自動識別
+- 📝 **日本語変数辞書**: 変数名・役割・型を見やすいカード形式で表示
+- ✏️ **インタラクティブ編集**: 生成された説明を直接編集可能
+- 🌐 **全言語対応**: JavaScript, Python, Java, C++, Go, Rust など全言語をサポート
+- 🔒 **プライバシー重視**: ローカルLLMのみ使用、コードが外部送信されません
 - ⚙️ **柔軟な設定**: お使いのローカルLLMに合わせてURL設定可能
+
+## 🚀 使用方法
+
+1. **LM StudioなどのローカルLLMサーバーを起動**
+2. **VSCode左サイドバーのSideVarアイコンをクリック**
+3. **ファイルを開いて「🤖 変数辞書を作成開始」ボタンを押下**
+4. **AI生成された変数説明を確認・必要に応じて編集**
+
+### 📹 デモ動画
+
+実際の動作を確認したい方は、プロジェクトのデモ動画をご覧ください。
 
 ## 🔧 Requirements
 
@@ -51,45 +69,40 @@ VSCodeのサイドバーに現在開いているファイルの変数名を辞�
 | **LocalAI** | `http://localhost:8080/v1` | OpenAI互換 |
 | **Llama.cpp server** | `http://localhost:8080/v1` | OpenAI互換モード |
 
-## Known Issues
+## 💡 使用例
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+```typescript
+// 解析対象のTypeScriptファイル例
+const userName = "John Doe";           // → "ユーザーの名前を保存する文字列変数"
+let processCount = 0;                  // → "処理回数をカウントする数値変数"  
+const apiEndpoint = "https://api...";  // → "API通信先のエンドポイントURL"
+```
 
-## Release Notes
+## 🐛 既知の問題
 
-Users appreciate release notes as you update your extension.
+- ネットワーク切断時にOpenAIライブラリが接続を試行する警告が表示される場合があります
+- 大きなファイル（1000行以上）では解析に時間がかかる場合があります
 
-### 1.0.0
+## 📝 リリースノート
 
-Initial release of ...
+### 1.0.0 (2024-08-23)
 
-### 1.0.1
+**🎉 初回リリース**
+- ✅ AI駆動型変数辞書機能
+- ✅ ローカルLLMサーバー対応（LM Studio, Ollama等）
+- ✅ 日本語での変数役割解説
+- ✅ インタラクティブ編集機能
+- ✅ 全プログラミング言語サポート
+- ✅ プライバシー重視設計（ローカル処理のみ）
 
-Fixed issue #.
+## 🤝 コントリビュート
 
-### 1.1.0
+バグ報告や機能要望は[GitHub Issues](https://github.com/ak-nagae/sidevar/issues)でお願いします。
 
-Added features X, Y, and Z.
+## 📜 ライセンス
+
+このプロジェクトはMITライセンスの下で提供されています。詳細は[LICENSE](LICENSE)ファイルをご覧ください。
 
 ---
 
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+**🚀 開発効率を向上させるAI変数辞書をぜひお試しください！**

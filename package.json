@@ -1,15 +1,31 @@
 {
   "name": "sidevar",
-  "displayName": "sideVar",
-  "description": "List all variables of the current file in the sidebar — 変数はサイドバーに。",
-  "version": "0.0.1",
+  "displayName": "SideVar - AI Variable Dictionary",
+  "description": "AI-powered variable dictionary that displays variable roles in Japanese using local LLM — 変数はサイドバーに。",
+  "version": "1.0.0",
+  "publisher": "ak-nagae",
   "icon": "assets/images/sidevar.png",
   "engines": {
     "vscode": "^1.102.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Machine Learning",
+    "Visualization"
   ],
+  "keywords": [
+    "variables",
+    "dictionary",
+    "AI",
+    "LLM",
+    "Japanese",
+    "documentation",
+    "code analysis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ak-nagae/sidevar"
+  },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {

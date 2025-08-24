@@ -61,7 +61,7 @@ JSON形式で以下の構造で変数名と役割説明を返してください�
         model: "openai/gpt-oss-20b",
         messages: [{ role: "user", content: prompt }],
         temperature: 0.1,
-        max_tokens: 2000,
+        max_tokens: 4000,
       });
 
       const content = completion.choices[0]?.message?.content;
@@ -71,10 +71,17 @@ JSON形式で以下の構造で変数名と役割説明を返してください�
 
       return this.parseResponse(content);
     } catch (error) {
+      console.error("LLM API Error:", error);
       if (error instanceof Error) {
+        console.error("Error details:", {
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        });
         throw new Error(`LLM通信エラー: ${error.message}`);
       }
-      throw new Error("不明なエラーが発生しました");
+      console.error("Unknown error type:", typeof error, error);
+      throw new Error(`不明なエラーが発生しました: ${JSON.stringify(error)}`);
     }
   }
 
@@ -249,6 +256,14 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
         "main.js"
       )
     );
+    const headerImageUri = webview.asWebviewUri(
+      vscode.Uri.joinPath(
+        this.context.extensionUri,
+        "assets",
+        "images",
+        "header.png"
+      )
+    );
     const csp = [
       "default-src 'none';",
       `img-src ${webview.cspSource} https:;`,
@@ -268,10 +283,25 @@ class SideVarViewProvider implements vscode.WebviewViewProvider {
           <link rel="stylesheet" href="${stylesUri}">
         </head>
         <body>
-          <h3>SideVar</h3>
-          <p>選択中のファイルをベースに変数辞書を作成します</p>
-          <button id="analyzeBtn">🤖 変数辞書を作成開始</button>
-          <div id="table"></div>
+          <header class="app-header">
+            <div class="header-content">
+              <div class="app-branding">
+                <div class="header-top">
+                  <img src="${headerImageUri}" alt="SideVar Logo" class="header-logo">
+                  <span class="app-version">v1.0</span>
+                </div>
+                <p class="app-tagline">AI-Powered Variable Dictionary</p>
+              </div>
+            </div>
+          </header>
+          
+          <main class="app-main">
+            <div class="action-section">
+              <p class="action-description">選択中のファイルをベースに変数辞書を作成します</p>
+              <button id="analyzeBtn">🤖 変数辞書を作成開始</button>
+            </div>
+            <div id="table"></div>
+          </main>
 
           <!-- Load scripts in dependency order -->
           <script nonce="${nonce}" src="${editableCellUri}"></script>
